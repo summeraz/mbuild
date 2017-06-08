@@ -56,10 +56,16 @@ def write_lammpsdata(structure, filename):
     angles = [[angle.atom1.idx+1,
                angle.atom2.idx+1,
                angle.atom3.idx+1] for angle in structure.angles]
-    dihedrals = [[dihedral.atom1.idx+1,
-                  dihedral.atom2.idx+1,
-                  dihedral.atom3.idx+1,
-                  dihedral.atom4.idx+1] for dihedral in structure.rb_torsions]
+    if structure.rb_torsions:
+        rb_torsions = [[dihedral.atom1.idx+1,
+                        dihedral.atom2.idx+1,
+                        dihedral.atom3.idx+1,
+                        dihedral.atom4.idx+1] for dihedral in structure.rb_torsions]
+    elif structure.dihedrals:
+        dihedrals = [[dihedral.atom1.idx+1,
+                      dihedral.atom2.idx+1,
+                      dihedral.atom3.idx+1,
+                      dihedral.atom4.idx+1] for dihedral in structure.dihedrals]
 
     if bonds:
         if len(structure.bond_types) == 0:
@@ -78,15 +84,28 @@ def write_lammpsdata(structure, filename):
         angle_types = [unique_angle_types[(round(angle.type.k,3),
                                            round(angle.type.theteq,3))] for angle in structure.angles]
 
-    if dihedrals:
+    if structure.dihedrals:
+        unique_dihedral_types = dict(enumerate(set([(round(dihedral.type.phi_k, 5),
+                                                     round(dihedral.type.per),
+                                                     round(dihedral.type.phase),
+                                                     round(dihedral.type.scee, 3),
+                                                     round(dihedral.type.scnb, 3)) for dihedral in structure.dihedrals])))
+        unique_dihedral_types = OrderedDict([(y,x+1) for x,y in unique_dihedral_types.items()])
+        dihedral_types = [unique_dihedral_types[(round(dihedral.type.phi_k, 5),
+                                                 round(dihedral.type.per),
+                                                 round(dihedral.type.phase),
+                                                 round(dihedral.type.scee, 3),
+                                                 round(dihedral.type.scnb, 3))] for dihedral in structure.dihedrals]
+
+    if structure.rb_torsions:
         unique_dihedral_types = dict(enumerate(set([(round(dihedral.type.c0,3),
                                                      round(dihedral.type.c1,3),
                                                      round(dihedral.type.c2,3),
                                                      round(dihedral.type.c3,3),
                                                      round(dihedral.type.c4,3),
                                                      round(dihedral.type.c5,3),
-                                                     round(dihedral.type.scee,1),
-                                                     round(dihedral.type.scnb,1)) for dihedral in structure.rb_torsions])))
+                                                     round(dihedral.type.scee,3),
+                                                     round(dihedral.type.scnb,3)) for dihedral in structure.rb_torsions])))
         unique_dihedral_types = OrderedDict([(y,x+1) for x,y in unique_dihedral_types.items()])
         dihedral_types = [unique_dihedral_types[(round(dihedral.type.c0,3),
                                                  round(dihedral.type.c1,3),
@@ -148,7 +167,13 @@ def write_lammpsdata(structure, filename):
                     data.write('{}\t{}\t{:.5f}\n'.format(idx,*params))
 
             # Dihedral coefficients
-            if dihedrals:
+            if structure.dihedrals:
+                data.write('\nDihedral Coeffs # charmm\n\n')
+                for params, idx in unique_dihedral_types.items():
+                    data.write('{}\t{:.5f}\t{:d}\t{:d}\t{:.1f}\n'.format(idx,
+                        *params[:3], 0.0))
+
+            if structure.rb_torsions:
                 data.write('\nDihedral Coeffs # opls\n\n')
                 for params,idx in unique_dihedral_types.items():
                     opls_coeffs = RB_to_OPLS(params[0],
@@ -177,7 +202,12 @@ def write_lammpsdata(structure, filename):
                 data.write('{:d}\t{:d}\t{:d}\t{:d}\t{:d}\n'.format(i+1,angle_types[i],angle[0],angle[1],angle[2]))
 
         # Dihedral data
-        if dihedrals:
+        if structure.dihedrals:
             data.write('\nDihedrals\n\n')
-            for i,dihedral in enumerate(dihedrals):
+            for i, dihedral in enumerate(dihedrals):
+                data.write('{:d}\t{:d}\t{:d}\t{:d}\t{:d}\t{:d}\n'.format(i+1,dihedral_types[i],dihedral[0],dihedral[1],dihedral[2],dihedral[3]))
+
+        if structure.rb_torsions:
+            data.write('\nDihedrals\n\n')
+            for i, dihedral in enumerate(rb_torsions):
                 data.write('{:d}\t{:d}\t{:d}\t{:d}\t{:d}\t{:d}\n'.format(i+1,dihedral_types[i],dihedral[0],dihedral[1],dihedral[2],dihedral[3]))
