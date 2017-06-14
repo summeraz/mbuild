@@ -6,22 +6,28 @@ class Box(object):
 
     Attributes
     ----------
-    mins : np.ndarray, shape=(3,), dtype=float
+    mins : array-like, shape=(3,), dtype=float
         Minimum x, y, z coordinates.
-    maxs : np.ndarray, shape=(3,), dtype=float
+    maxs : array-like, shape=(3,), dtype=float
         Maximum x, y, z coordinates.
-    lengths : np.ndarray, shape(3,), dtype=float
+    lengths : array-like, shape(3,), dtype=float
         Box length in x, y and z directions.
 
     """
     def __init__(self, lengths=None, mins=None, maxs=None):
         if lengths is not None:
             assert mins is None and maxs is None
+            lengths = np.asarray(lengths)
+            assert lengths.shape == (3,)
             self._mins = np.array([0.0, 0.0, 0.0])
             self._maxs = np.array(lengths)
             self._lengths = np.array(lengths)
         elif maxs is not None:
             assert mins is not None and lengths is None
+            maxs = np.asarray(maxs)
+            mins = np.asarray(mins)
+            assert maxs.shape == (3,)
+            assert mins.shape == (3,)
             self._mins = np.array(mins)
             self._maxs = np.array(maxs)
             self._lengths = self.maxs - self.mins
