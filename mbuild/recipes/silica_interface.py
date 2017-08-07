@@ -44,6 +44,13 @@ class SilicaInterface(mb.Compound):
         random.seed(seed)
         self._oh_density = 5.0
         self._O_buffer = 0.275
+        self._surface_site_buffer = thickness + 0.2
+        '''
+        Note: `_surface_site_buffer` is specified to prevent the identification of
+        surface sites at unrealistic locations deep in the surface. All oxygens
+        featuring only a single bond that feature a z-value greater than
+        `_surface_site_buffer` will be identified as eligible surface sites.
+        '''
 
         self._cleave_interface(bulk_silica, tile_x, tile_y, thickness)
         self.generate_bonds(name_a='Si', name_b='O', dmin=0.0, dmax=0.20419)
@@ -94,9 +101,10 @@ class SilicaInterface(mb.Compound):
         area = self.periodicity[0] * self.periodicity[1]
         target = int(oh_density * area)
 
+        surface_site_buffer = self._surface_site_buffer
         dangling_Os = [atom for atom in self.particles()
                        if atom.name == 'O' and
-                       atom.pos[2] > thickness and
+                       atom.pos[2] > surface_site_buffer and
                        len(self.bond_graph.neighbors(atom)) == 1]
 
         n_bridges = int((len(dangling_Os) - target) / 2)
@@ -126,9 +134,10 @@ class SilicaInterface(mb.Compound):
 
     def _identify_surface_sites(self, thickness):
         """Label surface sites and add ports above them. """
+        surface_site_buffer = self._surface_site_buffer
         for atom in self.particles():
             if len(self.bond_graph.neighbors(atom)) == 1:
-                if atom.name == 'O' and atom.pos[2] > thickness:
+                if atom.name == 'O' and atom.pos[2] > surface_site_buffer:
                     atom.name = 'OS'
                     port = mb.Port(anchor=atom)
                     port.spin(np.pi/2, [1, 0, 0])
