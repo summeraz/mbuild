@@ -26,6 +26,8 @@ class SilicaInterface(mb.Compound):
     thickness : float, optional, default=1.0
         Thickness of the slab to carve from the silica bulk. (in nm; not
         including oxygen layers on the top and bottom of the surface)
+    seed : int, optional, default=12345
+        Seed for the random number generator used in bridging surface oxygens
 
     References
     ----------
