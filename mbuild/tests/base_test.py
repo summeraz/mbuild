@@ -86,10 +86,8 @@ class BaseTest:
         molecule.add(mb.Particle(name='C', pos=[5, 5, 5]), label='middle')
         molecule.add(mb.Particle(name='C', pos=[6, 5, 5]), label='right')
         molecule.add(mb.Particle(name='C', pos=[4, 5, 5]), label='left')
-        molecule.add(mb.Port(anchor=molecule[0]), label='up')
-        molecule['up'].translate([0, 1, 0])
-        molecule.add(mb.Port(anchor=molecule[0]), label='down')
-        molecule['down'].translate([0, -1, 0])
+        molecule.add(mb.Port(anchor=molecule[0], separation=1), label='up')
+        molecule.add(mb.Port(anchor=molecule[0], separation=-1), label='down')
         molecule.add(mb.Particle(name='C', pos=[5, 5, 6]), label='front')
         molecule.add(mb.Particle(name='C', pos=[5, 5, 4]), label='back')
         molecule.generate_bonds('C', 'C', 0.9, 1.1)
@@ -112,14 +110,11 @@ class BaseTest:
     def benzene_from_parts(self):
         ch = mb.load(get_fn('ch.mol2'))
         ch.name = 'CH'
-        mb.translate(ch, -ch[0].pos)       
-        ch.add(mb.Port(anchor=ch[0]), 'a')
-        mb.translate(ch['a'], [0, 0.07, 0]) 
-        mb.rotate_around_z(ch['a'], 120.0 * (np.pi/180.0))
-
-        ch.add(mb.Port(anchor=ch[0]), 'b')
-        mb.translate(ch['b'], [0, 0.07, 0]) 
-        mb.rotate_around_z(ch['b'], -120.0 * (np.pi/180.0))
+        ch.translate(-ch[0].pos)
+        ch.add(mb.Port(anchor=ch[0], orientation=[0.866, -0.5, 0], separation=0.07),
+               label='a')
+        ch.add(mb.Port(anchor=ch[0], orientation=[-0.866, -0.5, 0], separation=0.07),
+               label='b')
 
         benzene = mb.Compound(name='Benzene')
         benzene.add(ch)
@@ -153,14 +148,12 @@ class BaseTest:
         ch = mb.load(get_fn('ch.mol2'))
         ch.name = 'CH'
         ch.label_rigid_bodies()
-        mb.translate(ch, -ch[0].pos)    
-        ch.add(mb.Port(anchor=ch[0]), 'a')
-        mb.translate(ch['a'], [0, 0.07, 0]) 
-        mb.rotate_around_z(ch['a'], 120.0 * (np.pi/180.0))
+        ch.translate(-ch[0].pos)
+        ch.add(mb.Port(anchor=ch[0], orientation=[0.866, -0.5, 0], separation=0.07),
+               label='a')
 
-        ch.add(mb.Port(anchor=ch[0]), 'b')
-        mb.translate(ch['b'], [0, 0.07, 0]) 
-        mb.rotate_around_z(ch['b'], -120.0 * (np.pi/180.0))
+        ch.add(mb.Port(anchor=ch[0], orientation=[-0.866, -0.5, 0], separation=0.07),
+               label='b')
         return ch
 
     @pytest.fixture
