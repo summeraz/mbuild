@@ -567,9 +567,9 @@ def spin(compound, theta, around):
     if np.array_equal(around, np.zeros(3)):
         raise ValueError('Cannot spin around a zero vector')
     center_pos = compound.center
-    translate(compound, -center_pos)
-    rotate(compound, theta, around)
-    translate(compound, center_pos)
+    compound.translate(-center_pos)
+    compound.rotate(theta, around)
+    compound.translate(center_pos)
 
 
 def _spin(coordinates, theta, around):
@@ -721,7 +721,7 @@ def y_axis_transform(compound, new_origin=None,
     x_axis_transform(compound, new_origin=new_origin,
                      point_on_x_axis=point_on_y_axis,
                      point_on_xy_plane=point_on_xy_plane)
-    rotate_around_z(compound, np.pi / 2)
+    compound.rotate(theta=np.pi / 2, around=[0, 0, 1])
 
 
 def z_axis_transform(compound, new_origin=None,
@@ -744,4 +744,4 @@ def z_axis_transform(compound, new_origin=None,
     x_axis_transform(compound, new_origin=new_origin,
                      point_on_x_axis=point_on_z_axis,
                      point_on_xy_plane=point_on_zx_plane)
-    rotate_around_y(compound, np.pi * 3 / 2)
+    compound.rotate(theta=np.pi * 3 / 2, around=[0, 1, 0])

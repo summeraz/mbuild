@@ -16,12 +16,12 @@ class TestPattern(BaseTest):
         assert [ethane.center[i]==coord for i,coord in enumerate(port.center)]
 
     def test_port_init_shift_0(self, ethane):
-        mb.translate_to(ethane, np.ones(3))
+        ethane.translate_to(np.ones(3))
         port = mb.Port(anchor=ethane, separation=0)
         assert [ethane.center[i]==coord for i,coord in enumerate(port.center)]
 
     def test_port_init_shift(self, ethane):
-        mb.translate_to(ethane, np.ones(3))
+        ethane.translate_to(np.ones(3))
         separation = [1, 2, 3]
         port = mb.Port(anchor=ethane, separation=separation)
         assert [ethane.center[i]+separation[i]==coord 
