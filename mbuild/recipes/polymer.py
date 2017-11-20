@@ -24,9 +24,15 @@ class Polymer(Compound):
         monomers in the order assigned by the built-in `sorted()`.
     port_labels : 2-tuple of strs, optional, default=('up', 'down')
         The names of the two ports to use to connect copies of proto.
+    caps : 2-tuple of mb.Compound, optional, default=(None, None)
+        Capping compounds to add to the polymer chain. These are added in
+        the order provided in the tuple. Specifying `None` will not add
+        a capping compound to that end of the chain. These compound are
+        expected to feature only a single `Port`.
 
     """
-    def __init__(self, monomers, n, sequence='A', port_labels=('up', 'down')):
+    def __init__(self, monomers, n, sequence='A', port_labels=('up', 'down'),
+                 caps=(None, None)):
         if n < 1:
             raise ValueError('n must be 1 or more')
         super(Polymer, self).__init__()
@@ -62,14 +68,41 @@ class Polymer(Compound):
             if n_added == n * len(sequence) - 1:
                 break
 
-        # Hoist the last part's top port to be the top port of the polymer.
-        self.add(last_part.labels[port_labels[0]], port_labels[0], containment=False)
+        if caps[-1]:
+            self.add(caps[-1])
+            # Attach capping compound to top of the polymer
+            top_cap_ports = caps[-1].available_ports()
+            if len(top_cap_ports) != 1:
+                raise ValueError('Number of available ports referenced by top '
+                                 'cap is not equal to 1. {} found.'
+                                 ''.format(len(top_cap_ports)))
+            force_overlap(caps[-1],
+                          top_cap_ports[0],
+                          last_part.labels[port_labels[0]])
+        else:
+            # Hoist the last part's top port to be the top port of the polymer.
+            self.add(last_part.labels[port_labels[0]], port_labels[0],
+                     containment=False)
 
-        # Hoist the first part's bottom port to be the bottom port of the polymer.
-        self.add(first_part.labels[port_labels[1]], port_labels[1], containment=False)
+        if caps[0]:
+            self.add(caps[0])
+            # Attach capping compound to bottom of the polymer
+            bottom_cap_ports = caps[0].available_ports()
+            if len(bottom_cap_ports) != 1:
+                raise ValueError('Number of available ports referenced by bottom '
+                                 'cap is not equal to 1. {} found.'
+                                 ''.format(len(bottom_cap_ports)))
+            force_overlap(caps[0],
+                          bottom_cap_ports[0],
+                          first_part.labels[port_labels[1]])
+        else:
+            # Hoist the first part's bottom port to be the bottom port of the polymer.
+            self.add(first_part.labels[port_labels[1]], port_labels[1],
+                     containment=False)
 
 if __name__ == "__main__":
     from mbuild.lib.moieties import CH2
+    from mbuild.lib.atoms import H
     ch2 = CH2()
-    poly = Polymer(ch2, n=13, port_labels=("up", "down"))
+    poly = Polymer(ch2, n=13, port_labels=("up", "down"), caps=(H(), H()))
     poly.save('polymer.mol2')
