@@ -33,12 +33,12 @@ To make your life easier, we recommend that you use a pre-packaged Python
 distribution like `Continuum's Anaconda <https://store.continuum.io/>`_
 in order to get all of the dependencies.
 
-Testing your installation
--------------------------
+Testing your installation (source installation only)
+----------------------------------------------------
 
-mBuild uses ``py.test`` for unit testing. To run them simply type run the
+mBuild uses ``pytest`` for unit testing. To run them simply run the
 following while in the base directory::
 
     $ conda install pytest
-    $ py.test -v
+    $ pytest -v
 
