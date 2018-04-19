@@ -4,6 +4,17 @@ Installation
 
 Install with `conda <http://continuum.io/downloads>`_
 -----------------------------------------------------
+
+We recommend making sure you have the latest versions of conda and Anaconda
+before installing mBuild:
+
+::
+
+    $ conda update conda anaconda
+
+mBuild can be installed from the `mosdef` channel. The `omnia` channel
+should also be specified for installation of dependencies.
+
 ::
 
     $ conda install -c omnia -c mosdef mbuild
