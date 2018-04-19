@@ -12,18 +12,20 @@ before installing mBuild:
 
     $ conda update conda anaconda
 
-mBuild can be installed from the `mosdef` channel. The `omnia` channel
-should also be specified for installation of dependencies.
+mBuild can be installed from the ``mosdef`` channel. The ``omnia`` and
+``conda-forge`` channels should also be specified for installation of
+dependencies.
 
 ::
 
-    $ conda install -c omnia -c mosdef mbuild
+    $ conda install -c conda-forge -c omnia -c mosdef mbuild
 
 Alternatively you can add all the required channels to your ``.condarc``
 after which you can simply install without specifying the channels::
 
-    $ conda config --add channels omnia
     $ conda config --add channels mosdef
+    $ conda config --add channels omnia
+    $ conda config --add channels conda-forge
     $ conda install mbuild
 
 .. note::
