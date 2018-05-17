@@ -65,6 +65,13 @@ pmpc_layer = PMPCLayer(chain_length=20, pattern=pattern, tile_x=3, tile_y=2)
 ![Zwitterionic brushes on beta-cristobalite substrate](docs/images/pmpc.png)
 
 
+### Contact
+
+ * [Andrew Summers](andrew.z.summers@vanderbilt.edu) - Vanderbilt University
+ * [Christoph Klein](christoph.t.klein@me.com) - formerly at Vanderbilt University
+ * [Justin Gilmer](justin.b.gilmer@vanderbilt.edu) - Vanderbilt University
+
+
 #### [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
 Various sub-portions of this library may be independently distributed under

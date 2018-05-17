@@ -1,0 +1,3 @@
+[submodule "docs/tutorials/mosdef_tutorials"]
+	path = docs/tutorials/mosdef_tutorials
+	url = https://github.com/mosdef-hub/mosdef_tutorials.git

@@ -51,7 +51,7 @@ different licenses. See those files for their specific terms.
 .. toctree::
    :hidden:
 
-   tutorials/tutorials
+   tutorials
 
 .. toctree::
    :hidden:
