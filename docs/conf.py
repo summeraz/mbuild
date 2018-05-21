@@ -55,7 +55,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
-   'notebook_sphinxext',
+    'notebook_sphinxext',
     'numpydoc'
 ]
 
