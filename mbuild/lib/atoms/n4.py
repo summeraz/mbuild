@@ -5,24 +5,23 @@ import numpy as np
 class N4(mb.Compound):
     """An tetravalent nitrogen atom."""
     def __init__(self):
-        super(N4, self).__init__()
+        super(N4, self).__init__(name='N')
 
-        self.add(mb.Particle(name='N', pos=[0, 0, 0]), label='N[$]')
-        self.add(mb.Port(anchor=self[0]), label='port_0')
-        self.add(mb.Port(anchor=self[0]), label='port_1')
-        self.add(mb.Port(anchor=self[0]), label='port_2')
-        self.add(mb.Port(anchor=self[0]), label='port_3')
+        port0 = mb.Port(anchor=self, label='port[$]')
+        port1 = mb.Port(anchor=self, label='port[$]')
+        port2 = mb.Port(anchor=self, label='port[$]')
+        port3 = mb.Port(anchor=self, label='port[$]')
 
-        self['port_2'].spin(2/3*np.pi, [1, 0, 0])
-        self['port_3'].spin(-2/3*np.pi, [1, 0, 0])
-        self['port_1'].spin(1/3*np.pi, [0, 0, 1])
-        self['port_2'].spin(-1/3*np.pi, [0, 0, 1])
-        self['port_3'].spin(-1/3*np.pi, [0, 0, 1])
+        self['port[2]'].spin(2/3*np.pi, [1, 0, 0])
+        self['port[3]'].spin(-2/3*np.pi, [1, 0, 0])
+        self['port[1]'].spin(1/3*np.pi, [0, 0, 1])
+        self['port[2]'].spin(-1/3*np.pi, [0, 0, 1])
+        self['port[3]'].spin(-1/3*np.pi, [0, 0, 1])
 
-        self['port_0'].translate([0, 0.073, 0])
-        self['port_1'].translate([0.0594, -0.0243, 0])
-        self['port_2'].translate([-0.042, -0.0243, 0.042])
-        self['port_3'].translate([-0.042, -0.0243, -0.042])
+        self['port[0]'].translate([0, 0.073, 0])
+        self['port[1]'].translate([0.0594, -0.0243, 0])
+        self['port[2]'].translate([-0.042, -0.0243, 0.042])
+        self['port[3]'].translate([-0.042, -0.0243, -0.042])
 
 
 if __name__ == '__main__':

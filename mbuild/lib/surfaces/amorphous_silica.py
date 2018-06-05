@@ -18,13 +18,10 @@ class AmorphousSilica(mb.Compound):
                              'roughness of {0:.1f} does not exist. If you have '
                              'this structure, please submit a pull request to'
                              'add it! '.format(surface_roughness))
-        count = 0
         for particle in self.particles():
             if particle.name == 'OB':
-                count += 1
                 port = mb.Port(anchor=particle, orientation=[0, 0, 1],
                                separation=0.1)
-                self.add(port, 'port_{}'.format(count))
 
 if __name__ == "__main__":
     single = AmorphousSilica()

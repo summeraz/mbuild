@@ -9,11 +9,10 @@ class PegMonomer(mb.Compound):
         mb.load('peg_monomer.pdb', compound=self, relative_to_module=self.__module__)
         self.translate(-self[0].pos)
 
-        self.add(mb.Port(anchor=self[0]), 'down')
-        self['down'].translate([0, -0.07, 0])
-
-        self.add(mb.Port(anchor=self[6]), 'up')
-        self['up'].translate([0, 0.073, 0])
+        down_port = mb.Port(anchor=self[0], orientation=[0, -1, 0],
+                            separation=0.07, label='down')
+        up_port = mb.Port(anchor=self[6], orientation=[0, 1, 0],
+                          separation=0.073, label='up')
 
 if __name__ == '__main__':
     peg = PegMonomer()

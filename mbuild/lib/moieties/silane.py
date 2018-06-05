@@ -13,13 +13,10 @@ class Silane(mb.Compound):
         # origin and the oxygen atoms are on the x axis.
         mb.x_axis_transform(self, new_origin=self[0], point_on_x_axis=self[1])
 
-        # Add bottom port.
-        self.add(mb.Port(anchor=self[0]), 'down')
-        self['down'].translate(np.array([0, -.07, 0]))
-
-        # Add top port.
-        self.add(mb.Port(anchor=self[0]), 'up')
-        self['up'].translate(np.array([0, .07, 0]))
+        down_port = mb.Port(anchor=self[0], orientation=[0, -1, 0],
+                            separation=0.07, label='down')
+        up_port = mb.Port(anchor=self[0], orientation=[0, 1, 0],
+                          separation=0.07, label='up')
 
 if __name__ == "__main__":
     m = Silane()

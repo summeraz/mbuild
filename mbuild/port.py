@@ -36,9 +36,13 @@ class Port(Compound):
         transform.
 
     """
-    def __init__(self, anchor=None, orientation=None, separation=0):
+    def __init__(self, anchor=None, orientation=None, separation=0, label=None):
         super(Port, self).__init__(name='Port', port_particle=True)
+
+        if not label:
+            label = 'port[$]'
         self.anchor = anchor
+        anchor.add(self, label=label)
 
         default_direction = np.array([0, 1, 0])
         if orientation is None:

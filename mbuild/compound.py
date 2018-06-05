@@ -266,6 +266,11 @@ class Compound(object):
         else:
             self._charge = charge
 
+    @property
+    def is_particle(self):
+        return (not self.children or
+               (not self.port_particle and self._contains_only_ports()))
+
     def particles(self, include_ports=False):
         """Return all Particles of the Compound.
 
@@ -280,16 +285,15 @@ class Compound(object):
             The next Particle in the Compound
 
         """
-        if not self.children:
+        if self.is_particle:
             yield self
-        else:
-            for particle in self._particles(include_ports):
-                yield particle
+        for particle in self._particles(include_ports):
+            yield particle
 
     def _particles(self, include_ports=False):
         """Return all Particles of the Compound. """
         for child in self.successors():
-            if not child.children:
+            if child.is_particle:
                 if include_ports or not child.port_particle:
                     yield child
 
@@ -931,14 +935,14 @@ class Compound(object):
 
     @property
     def pos(self):
-        if not self.children:
+        if self.is_particle:
             return self._pos
         else:
             return self.center
 
     @pos.setter
     def pos(self, value):
-        if not self.children:
+        if self.is_particle:
             self._pos = value
         else:
             raise MBuildError('Cannot set position on a Compound that has'
